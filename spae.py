@@ -1,18 +1,6 @@
 import torch
 from torch import nn
-import numpy as np
-from pytorch3d.ops import laplacian
-from pytorch3d.structures import Meshes
 
-class LaplacianReduction(nn.Module):
-    def __init__(self,emb_vec):
-        super().__init__()
-        self.transform_matrix=emb_vec    
-    def forward(self, x):
-        return x@self.transform_matrix
-    
-    def inverse(self, y):
-        return y@self.transform_matrix.t()
     
 
 class LearnablePooling(nn.Module):
@@ -102,7 +90,7 @@ class SimpleLayerDec(nn.Module):
         return x
 
 
-
+'''
 class SpectralAutoencoderCNN(nn.Module):
     def __init__(self,latent_size,v):
         super().__init__()
@@ -153,12 +141,11 @@ class SpectralAutoencoderCNN(nn.Module):
         x=torch.transpose(x,1,2)
         x=x.reshape(x.shape[0],-1)  
         return x
-    
+'''    
 class SpectralAutoencoderFNN(nn.Module):
-    def __init__(self,latent_size,v):
+    def __init__(self,latent_size):
         super().__init__()
         self.latent_size = latent_size
-        self.laplacian=LaplacianReduction(v)
         self.enc1=LBR(512*3,500) 
         self.enc2=LBR(500,500)
         self.enc3=LBR(500,500)

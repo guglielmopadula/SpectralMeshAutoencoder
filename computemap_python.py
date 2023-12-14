@@ -4,9 +4,6 @@ import meshio
 from sklearn.decomposition import PCA
 import scipy.sparse
 import scipy.io
-from pytorch3d.structures import Meshes
-from scipy.sparse.linalg import eigsh
-from pytorch3d.ops import laplacian
 import torch
 
 ##Modification of a code from pytorch3d
@@ -70,6 +67,7 @@ w,v=eigsh(laplacian,k=512,which='LM',sigma=0,return_eigenvectors=True)
 scipy.io.savemat('v.mat', {'v': v})
 '''
 edges=scipy.io.loadmat('edges.mat')["edges"]
+print(edges.shape)
 points=torch.zeros(600,edges.max()+1,3)
 edges=edges.T
 edges=torch.tensor(edges)
@@ -77,6 +75,17 @@ L=laplacian(edges)
 print(L)
 print(L[0,0])
 w,v=torch.lobpcg(L,k=512,largest=False)
-scipy.io.savemat('v.mat', {'v': v})
+print(v.shape)
+np.save('v.npy',v)
 
-
+edges_red=scipy.io.loadmat('edges_red.mat')["edges"]
+print(edges_red.shape)
+points=torch.zeros(600,edges_red.max()+1,3)
+edges_red=edges_red.T
+edges_red=torch.tensor(edges_red)
+L_red=laplacian(edges_red)
+print(L)
+print(L[0,0])
+w_red,v_red=torch.lobpcg(L_red,k=512,largest=False)
+print(v_red.shape)
+np.save('v_red.npy',v_red)
